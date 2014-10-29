@@ -7,7 +7,9 @@ Move the ssh file in path ~/bin/ssh and add in your ~/.bash_profile the code lin
 
 export PATH=$HOME/bin:/opt/local/bin:$PATH
 
-Restart your Terminal or execute the command source ~/.bash_profile.
+Restart your Terminal or execute the command:
+
+~user$ source ~/.bash_profile
 
 Done!
 
