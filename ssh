@@ -1,0 +1,47 @@
+#!/bin/sh
+
+qa[0]=environment-qa-machine-$2-test.com.br
+qa[1]=Homebrew
+
+prod[0]=environment-prod-machine-$2-test.com.br
+prod[1]=Pro
+
+get_host () {
+  env="$1"
+  echo ${!env}
+}
+
+change_theme () {
+  NAME=$1; if [ -z "$NAME" ]; then NAME="Basic"; fi
+  osascript -e "tell application \"Terminal\" to set current settings of front window to settings set \"$NAME\""
+}
+
+function do_ssh {
+  /usr/bin/ssh "$HOSTNAME"
+}
+
+on_exit () {
+  change_theme "Basic"
+}
+
+trap on_exit EXIT
+
+HOSTNAME=$(get_host $1)
+
+if [[ $HOSTNAME == *${qa[0]}* ]]
+then
+  change_theme "${qa[1]}"
+  do_ssh
+fi
+
+if [[ $HOSTNAME == *${prod[0]}* ]]
+then
+  echo "Do you really open Production Environment? [yes/no]: "
+
+  read
+
+  if [ "$REPLY" = "yes" ]; then
+    change_theme "${prod[1]}"
+    do_ssh
+  fi
+fi
